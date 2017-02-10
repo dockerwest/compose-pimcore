@@ -10,15 +10,15 @@ cd "$(dirname "$(dirname "$(readlink -f $0)")../")"
 
 # we need some configuration
 if [ -e .env ]; then
-    source "$(pwd)/.env"
+    . "$(pwd)/.env"
 elif [ -e .env-sample ]; then
-    source "$(pwd)/.env-sample"
+    . "$(pwd)/.env-sample"
 else
     echo "no config found"
     exit 1
 fi
 
-source share/init
+. share/init
 
 pimcorefolder=$(realpath "$PIMCORE")
 
