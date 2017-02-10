@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+cd "$(dirname "$(readlink -f $0)")"
+
+# we need some configuration
+if [ -e .env ]; then
+    source "$(pwd)/.env"
+elif [ -e .env-sample ]; then
+    source "$(pwd)/.env-sample"
+else
+    echo "no config found"
+    exit 1
+fi
+
+PATH="$(pwd)/bin:$PATH"
+export PATH
+
+sessionname=$(echo "$BASEHOST" | sed 's/[^a-zA-Z]//g');
+
+if [ "$1" = "screen" ]; then
+    screen -r $sessionname
+    if [ "$?" -ne 0 ]; then
+        screen -S $sessionname
+    fi
+elif [ "$1" = "tmux" ]; then
+    tmux has-session -t $sessionname
+    if [[ $? -ne 0 ]]; then
+        tmux new -s $sessionname
+    else
+        tmux a -t $sessionname
+    fi
+fi

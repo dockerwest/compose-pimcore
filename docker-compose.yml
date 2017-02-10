@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:alpine
+    environment:
+      - DOMAIN_NAME=redis.${BASEHOST:-pimcore.dev}
+
+  mysql:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
+      - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.dev}
+    command: --innodb-doublewrite=0
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    environment:
+      - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.dev}
+
+  application:
+    image: blackikeeagle/php-pimcore:${PHPVERSION:-7.1}
+    environment:
+      - C_UID=${C_UID:-1000}
+      - C_GID=${G_UID:-1000}
+      - DEVELOPMENT=${DEVELOPMENT:-noprofile}
+    volumes:
+      - ${PIMCORE:-../pimcore}:/var/www/app
+    links:
+      - mysql
+      - redis
+      - mailcatcher
+
+  nginx:
+    image: blackikeeagle/nginx-pimcore:${NGINXVERSION:-stable}
+    environment:
+      - VIRTUAL_HOST=www.${BASEHOST:-pimcore.dev}
+    volumes:
+      - ${PIMCORE:-../pimcore}:/var/www/app
+    links:
+      - application
+

@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+currentfolder="$(pwd)"
+
+cd "$(dirname "$(dirname "$(readlink -f $0)")../")"
+
+# we need some configuration
+if [ -e .env ]; then
+    source "$(pwd)/.env"
+elif [ -e .env-sample ]; then
+    source "$(pwd)/.env-sample"
+else
+    echo "no config found"
+    exit 1
+fi
+
+# running env?
+running=$(run ps | grep Up | wc -l)
+if [ $running -gt 0 ]; then
+    bin/run exec application gosu www-data php "$@"
+else
+    docker run -it --rm \
+        -v "$currentfolder":/var/www/app \
+        -e DEVELOPMENT="$DEVELOPMENT" \
+        -e C_UID=$C_UID \
+        -e C_GID=$C_GID \
+        blackikeeagle/php-pimcore:$PHPVERSION \
+        php "$@"
+fi
