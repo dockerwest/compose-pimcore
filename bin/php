@@ -10,9 +10,9 @@ cd "$(dirname "$(dirname "$(readlink -f $0)")../")"
 
 # we need some configuration
 if [ -e .env ]; then
-    source "$(pwd)/.env"
+    . "$(pwd)/.env"
 elif [ -e .env-sample ]; then
-    source "$(pwd)/.env-sample"
+    . "$(pwd)/.env-sample"
 else
     echo "no config found"
     exit 1
@@ -23,7 +23,7 @@ running=$(run ps | grep Up | wc -l)
 if [ $running -gt 0 ]; then
     bin/run exec application gosu www-data php "$@"
 else
-    source share/init
+    . share/init
 
     docker run -it --rm \
         -v "$currentfolder":/var/www/app \
