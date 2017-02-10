@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+if which greadlink > /dev/null 2>&1; then
+    alias readlink=greadlink
+fi
+
 currentfolder="$(pwd)"
 
 cd "$(dirname "$(dirname "$(readlink -f $0)")../")"

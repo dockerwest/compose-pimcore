@@ -115,6 +115,19 @@ Helpers
 
 ### run
 
+Tricks
+------
+
+### macOS
+
+For this environment to work properly you should install gnu coreutils
+
+using homebrew:
+
+~~~ sh
+$ brew install coreutils
+~~~
+
 License
 -------
 
