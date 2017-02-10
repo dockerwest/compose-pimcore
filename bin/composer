@@ -18,6 +18,8 @@ else
     exit 1
 fi
 
+source share/init
+
 pimcorefolder=$(realpath "$PIMCORE")
 
 docker run -it --rm \

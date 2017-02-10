@@ -128,6 +128,20 @@ using homebrew:
 $ brew install coreutils
 ~~~
 
+On macOS you could just install docker from the docker site and run like this.
+But our experience is that the native docker install is fairly slow to use. We
+would suggest you to install [dinghy](https://github.com/codekitchen/dinghy).
+
+[install dinghy](https://github.com/codekitchen/dinghy#install) and install the
+VM technology you want to use. If you want native xhyve support you can
+additionally install 
+[xhyve driver for docker machine](https://github.com/zchee/docker-machine-driver-xhyve).
+
+If you have dinghy installed this environment will try to use it.
+
+Currently there is an annoying limitation when we are using dinghy and that is
+that the hostnames used must end with `docker`.
+
 License
 -------
 

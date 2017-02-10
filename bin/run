@@ -16,6 +16,8 @@ else
     exit 1
 fi
 
+source share/init
+
 projectName=$(echo $BASEHOST | sed 's/[^a-zA-Z]//g')
 
-docker-compose -p "$projectName" "$@"
+docker-compose -f "$COMPOSE_FILE" -p "$projectName" "$@"

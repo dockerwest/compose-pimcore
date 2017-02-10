@@ -23,6 +23,8 @@ running=$(run ps | grep Up | wc -l)
 if [ $running -gt 0 ]; then
     bin/run exec application gosu www-data php "$@"
 else
+    source share/init
+
     docker run -it --rm \
         -v "$currentfolder":/var/www/app \
         -e DEVELOPMENT="$DEVELOPMENT" \

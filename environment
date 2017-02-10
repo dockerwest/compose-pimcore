@@ -19,6 +19,8 @@ fi
 PATH="$(pwd)/bin:$PATH"
 export PATH
 
+source share/init
+
 sessionname=$(echo "$BASEHOST" | sed 's/[^a-zA-Z]//g');
 
 if [ "$1" = "screen" ]; then
