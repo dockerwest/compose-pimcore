@@ -26,7 +26,7 @@ else
     . share/init
 
     docker run -it --rm \
-        -v "$currentfolder":/var/www/app \
+        -v "$currentfolder":/phpapp \
         -e DEVELOPMENT="$DEVELOPMENT" \
         -e C_UID=$C_UID \
         -e C_GID=$C_GID \
