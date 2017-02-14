@@ -34,7 +34,7 @@ services:
   nginx:
     image: blackikeeagle/nginx-pimcore:${NGINXVERSION:-stable}
     environment:
-      - VIRTUAL_HOST=www.${BASEHOST:-pimcore.dev}
+      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
     volumes:
       - ${PIMCORE:-../pimcore}:/phpapp
     links:
