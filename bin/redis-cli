@@ -21,7 +21,7 @@ fi
 # running env?
 running=$(run ps | grep Up | wc -l)
 if [ $running -gt 0 ]; then
-    bin/run exec redis redis-cli "$@"
+    bin/run exec -T redis redis-cli "$@"
 else
     echo "redis-cli requires a running redis"
 fi

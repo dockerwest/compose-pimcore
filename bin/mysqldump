@@ -21,7 +21,7 @@ fi
 # running env?
 running=$(run ps | grep Up | wc -l)
 if [ $running -gt 0 ]; then
-    bin/run exec mysql mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$@"
+    bin/run exec -T mysql mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$@"
 else
     echo "mysql requires a running mysql server"
 fi

@@ -22,7 +22,7 @@ fi
 
 pimcorefolder=$(realpath "$PIMCORE")
 
-docker run -it --rm \
+docker run -i --rm \
     -v $HOME/.ssh:/var/www/.ssh \
     -v $HOME/.composer:/var/www/.composer \
     -v $currentfolder:/phpapp \

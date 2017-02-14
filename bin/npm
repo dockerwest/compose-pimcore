@@ -22,7 +22,7 @@ fi
 
 pimcorefolder=$(realpath "$PIMCORE")
 
-docker run -it --rm \
+docker run -i --rm \
     -v $HOME/.ssh:/home/node/.ssh \
     -v $HOME/.npm:/home/node/.npm \
     -v $currentfolder:/nodeapp \
