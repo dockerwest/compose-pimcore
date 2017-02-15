@@ -4,7 +4,7 @@ if which greadlink > /dev/null 2>&1; then
     alias readlink=greadlink
 fi
 
-cd "$(dirname "$(dirname "$(readlink -f $0)")../")"
+cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
 
 # we need some configuration
 if [ -e .env ]; then

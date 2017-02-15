@@ -6,7 +6,7 @@ fi
 
 currentfolder="$(pwd)"
 
-cd "$(dirname "$(dirname "$(readlink -f $0)")../")"
+cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
 
 # we need some configuration
 if [ -e .env ]; then
