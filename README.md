@@ -101,15 +101,23 @@ To visualize your profiling output see
 Helpers
 -------
 
-### php
+`TODO explain what the helpers do`
 
 ### composer
+
+### create_db
 
 ### mysql
 
 ### mysqldump
 
-### create_db
+### mysqlimport
+
+### node
+
+### npm
+
+### php
 
 ### redis-cli
 
