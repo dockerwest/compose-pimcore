@@ -20,12 +20,10 @@ fi
 
 . share/init
 
-pimcorefolder=$(realpath "$PIMCORE")
-
 docker run -i --rm \
-    -v $HOME/.ssh:/home/node/.ssh \
-    -v $HOME/.npm:/home/node/.npm \
-    -v $currentfolder:/nodeapp \
+    -v "$HOME/.ssh":/home/node/.ssh \
+    -v "$HOME/.npm":/home/node/.npm \
+    -v "$currentfolder":/nodeapp \
     -e C_UID=$C_UID \
     -e C_GID=$C_GID \
     blackikeeagle/nodejs:7 \
