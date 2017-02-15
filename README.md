@@ -142,6 +142,13 @@ If you have dinghy installed this environment will try to use it.
 Currently there is an annoying limitation when we are using dinghy and that is
 that the hostnames used must end with `docker`.
 
+### oh-my-zsh users
+
+[oh-my-zsh](http://ohmyz.sh/) users should check if there is no fixed setting
+for `$PATH` in their `~/.zshrc`. If that is the case you can safely comment it
+out. If somewhere in your shell startup `$PATH` is forced you lose the features
+the `./environment` script brings to you.
+
 License
 -------
 
