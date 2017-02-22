@@ -22,7 +22,7 @@ services:
     network_mode: bridge
 
   application:
-    image: blackikeeagle/php-pimcore:${PHPVERSION:-7.1}
+    image: dockerwest/php-pimcore:${PHPVERSION:-7.1}
     environment:
       - C_UID=${C_UID:-1000}
       - C_GID=${G_UID:-1000}
@@ -36,7 +36,7 @@ services:
     network_mode: bridge
 
   nginx:
-    image: blackikeeagle/nginx-pimcore:${NGINXVERSION:-stable}
+    image: dockerwest/nginx-pimcore:${NGINXVERSION:-stable}
     environment:
       - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
       - VIRTUAL_PORT=80

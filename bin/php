@@ -30,6 +30,6 @@ else
         -e DEVELOPMENT="$DEVELOPMENT" \
         -e C_UID=$C_UID \
         -e C_GID=$C_GID \
-        blackikeeagle/php-pimcore:$PHPVERSION \
+        dockerwest/php-pimcore:$PHPVERSION \
         php "$@"
 fi

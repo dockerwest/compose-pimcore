@@ -26,5 +26,5 @@ docker run -i --rm \
     -v "$currentfolder":/nodeapp \
     -e C_UID=$C_UID \
     -e C_GID=$C_GID \
-    blackikeeagle/nodejs:7 \
+    dockerwest/nodejs:7 \
     npm "$@"
