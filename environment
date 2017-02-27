@@ -21,18 +21,34 @@ export PATH
 
 . share/init
 
+cd "$APPLICATION"
+
 sessionname=$(echo "$BASEHOST" | sed 's/[^a-zA-Z]//g');
 
-if [ "$1" = "screen" ]; then
+MANAGER=$1
+if [ -z "$MANAGER" ]; then
+    MANAGER="$WINDOW_MANAGER"
+fi
+
+if [ "$MANAGER" = "screen" ]; then
     screen -r $sessionname
     if [ "$?" -ne 0 ]; then
         screen -S $sessionname
     fi
-elif [ "$1" = "tmux" ]; then
+elif [ "$MANAGER" = "tmux" ]; then
     tmux has-session -t $sessionname
     if [ $? -ne 0 ]; then
         tmux new -s $sessionname
     else
         tmux a -t $sessionname
     fi
+elif [ "$MANAGER" = "byobu" ]; then
+    byobu has-session -t $sessionname
+    if [ $? -ne 0 ]; then
+        byobu new -s $sessionname
+    else
+        byobu a -t $sessionname
+    fi
+else
+    echo "run $0 [screen|tmux|byobu]"
 fi
