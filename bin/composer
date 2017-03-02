@@ -20,7 +20,7 @@ fi
 
 . share/init
 
-docker run -i --rm \
+docker run -it --rm \
     -v "$HOME/.ssh":/var/www/.ssh \
     -v "$HOME/.composer":/var/www/.composer \
     -v "$currentfolder":/phpapp \

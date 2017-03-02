@@ -25,7 +25,7 @@ if [ $running -gt 0 ]; then
 else
     . share/init
 
-    docker run -i --rm \
+    docker run -it --rm \
         -v "$currentfolder":/phpapp \
         -e DEVELOPMENT="$DEVELOPMENT" \
         -e C_UID=$C_UID \

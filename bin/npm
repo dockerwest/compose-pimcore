@@ -20,7 +20,7 @@ fi
 
 . share/init
 
-docker run -i --rm \
+docker run -it --rm \
     -v "$HOME/.ssh":/home/node/.ssh \
     -v "$HOME/.npm":/home/node/.npm \
     -v "$currentfolder":/nodeapp \

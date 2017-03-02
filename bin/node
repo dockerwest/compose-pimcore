@@ -20,7 +20,7 @@ fi
 
 . share/init
 
-docker run -i --rm \
+docker run -it --rm \
     -v "$currentfolder":/nodeapp \
     -e C_UID=$C_UID \
     -e C_GID=$C_GID \
