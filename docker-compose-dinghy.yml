@@ -28,7 +28,7 @@ services:
       - C_GID=${G_UID:-1000}
       - DEVELOPMENT=${DEVELOPMENT:-noprofile}
     volumes:
-      - ${PIMCORE:-../pimcore}:/phpapp
+      - ${APPLICATION:-../pimcore}:/phpapp
     links:
       - mysql
       - redis
@@ -41,7 +41,7 @@ services:
       - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
       - VIRTUAL_PORT=80
     volumes:
-      - ${PIMCORE:-../pimcore}:/phpapp
+      - ${APPLICATION:-../pimcore}:/phpapp
     links:
       - application
     network_mode: bridge
