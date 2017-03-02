@@ -55,7 +55,7 @@ PHPVERSION=7.1
 NGINXVERSION=stable
 BASEHOST=pimcore.dev
 MYSQL_ROOT_PASSWORD=toor
-PIMCORE=../pimcore
+APPLICATION=../pimcore
 DEVELOPMENT=noprofile
 ~~~
 
@@ -84,7 +84,7 @@ The example configuration will be give you `http://pimcore.dev`.
 
 Choose whatever you want to use as default root password.
 
-### PIMCORE
+### APPLICATION
 
 A relative or absolute path to your pimcore code. this can be a checkout of
   [pimcore](https://github.com/pimcore/pimcore).
