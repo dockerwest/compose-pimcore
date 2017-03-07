@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+if which greadlink > /dev/null 2>&1; then
+    alias readlink=greadlink
+fi
+
+currentfolder="$(pwd)"
+
+cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+
+# we need some configuration
+if [ -e .env ]; then
+    . "$(pwd)/.env"
+elif [ -e .env-sample ]; then
+    . "$(pwd)/.env-sample"
+else
+    echo "no config found"
+    exit 1
+fi
+
+. share/init
+
+docker run -i --rm \
+    -v "$HOME/.ssh":/home/node/.ssh \
+    -v "$HOME/.npm":/home/node/.npm \
+    -v "$currentfolder":/nodeapp \
+    -e C_UID=$C_UID \
+    -e C_GID=$C_GID \
+    dockerwest/nodejs:7 \
+    yarn "$@"
