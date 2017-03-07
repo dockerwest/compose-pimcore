@@ -11,19 +11,19 @@ some difficulties you could experience using docker containers.
 
 If you want this easy helpers to be readily available for you you can use
 `environment` before you start. `environment` allows you to start your
-environment with an updated `PATH` and allows you to choose between `tmux` or
-`screen`
+environment with an updated `PATH` and allows you to choose between `tmux`,
+`screen` or `byobu`. You can also define a default in the .env file. 
 
-tmux environment
+explicit setting the window manager:
 
 ~~~ sh
-$ ./environment tmux
+$ ./environment [tmux|screen|byobu]
 ~~~
 
-screen environment
+using default window manager, defined in .env
 
 ~~~ sh
-$ ./environment screen
+$ ./environment
 ~~~
 
 When you are running in this environment all helpers are available in your path.
@@ -57,6 +57,7 @@ BASEHOST=pimcore.dev
 MYSQL_ROOT_PASSWORD=toor
 APPLICATION=../pimcore
 DEVELOPMENT=noprofile
+WINDOW_MANAGER=tmux
 ~~~
 
 ### C_UID / C_GID
@@ -98,30 +99,75 @@ profiling output of you application.
 To visualize your profiling output see
 [docker-compose-xhgui](https://github.com/BlackIkeEagle/docker-compose-xhgui)
 
+### WINDOW_MANAGER
+Set the default window manager when running the environment.
+Available options are: tmux, screen and byobu
+
 Helpers
 -------
 
-`TODO explain what the helpers do`
-
 ### composer
+Run the [composer](https://getcomposer.org/) command inside the php docker container. 
+The working directory will be the current directory you are executing this command from.
+Your $HOME/.ssh and $HOME/.composer folders wil be mounted inside this container to enable you to make use of your ssh keys and composer cache.
+
+eg. `composer require package_name`
 
 ### create_db
+Create a new database inside the running mysql container with the name 'pimcore' and 'DEFAULT CHARSET utf8'.
+
+eg. `create_db`
 
 ### mysql
+Execute a mysql command inside the running mysql container as the root user.
+
+eg. `mysql "SELECT * FROM table_name;"`
 
 ### mysqldump
+Execute the mysqldump command inside the running mysql container as the root user.
+
+eg. `mysqldump db_name > export_file_name.sql`
 
 ### mysqlimport
+Import a given mysql file into a given database, inside the running mysql container as the root user.
+
+eg. `mysqlimport db_name import_file_name.sql`
 
 ### node
+Execute the [node](https://nodejs.org) command inside a node container. 
+The working directory will be the current directory you are executing this command from.
+
+eg. `node js_file.js`
 
 ### npm
+Execute the [npm](https://www.npmjs.com/) command inside a node container.
+The working directory will be the current directory you are executing this command from.
+Your $HOME/.ssh and $HOME/.npm folders wil be mounted inside this container to enable you to make use of your ssh keys and npm cache.
+
+eg. `npm install package_name`
+
+### yarn
+Execute the [yarn](https://yarnpkg.com) command inside a node container.
+The working directory will be the current directory you are executing this command from.
+Your $HOME/.ssh and $HOME/.npm folders wil be mounted inside this container to enable you to make use of your ssh keys and npm cache.
+
+eg. `yarn add package_name`
 
 ### php
+Execute the php command inside the running php container, or inside a php-pimcore container if none is running.
+The working directory will be the current directory you are executing this command from.
+
+eg. `php -v`
 
 ### redis-cli
+Execute the [redis-cli](https://redis.io/topics/rediscli) command in the running redis container.
+
+eg. `redis-cli flushall`
 
 ### run
+Run docker-compose for the current project, setting the project name to the BASEHOST variable from the .env file
+
+eg. `run up`
 
 Tricks
 ------
