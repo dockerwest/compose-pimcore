@@ -36,18 +36,18 @@ if [ "$MANAGER" = "screen" ]; then
         screen -S $sessionname
     fi
 elif [ "$MANAGER" = "tmux" ]; then
-    tmux has-session -t $sessionname
+    tmux -L $sessionname has-session -t $sessionname
     if [ $? -ne 0 ]; then
-        tmux new -s $sessionname
+        tmux -L $sessionname new -s $sessionname
     else
-        tmux a -t $sessionname
+        tmux -L $sessionname a -t $sessionname
     fi
 elif [ "$MANAGER" = "byobu" ]; then
-    byobu has-session -t $sessionname
+    byobu -L $sessionname has-session -t $sessionname
     if [ $? -ne 0 ]; then
-        byobu new -s $sessionname
+        byobu -L $sessionname new -s $sessionname
     else
-        byobu a -t $sessionname
+        byobu -L $sessionname a -t $sessionname
     fi
 else
     echo "run $0 [screen|tmux|byobu]"
