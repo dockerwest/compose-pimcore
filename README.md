@@ -196,6 +196,22 @@ If you have dinghy installed this environment will try to use it.
 Currently there is an annoying limitation when we are using dinghy and that is
 that the hostnames used must end with `docker`.
 
+#### tmux on macOS
+
+Tmux starts the shells as loginshells, that means that for example bash is
+going to load the `profile` files. This sort of behaviour triggers the
+path_helper that will move our added PATH to the end. This is not the behaviour
+we want.
+
+To fix this you can change the if for the path helper in your `/etc/profile` to
+the following:
+
+~~~ sh
+if [ -z $TMUX ] && [ -x /usr/libexec/path_helper ]; then
+	eval `/usr/libexec/path_helper -s`
+fi
+~~~
+
 ### oh-my-zsh users
 
 [oh-my-zsh](http://ohmyz.sh/) users should check if there is no fixed setting
