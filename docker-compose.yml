@@ -32,7 +32,7 @@ services:
       - mailcatcher
 
   nginx:
-    image: dockerwest/nginx-pimcore:${NGINXVERSION:-stable}
+    image: dockerwest/nginx-symfony:${NGINXVERSION:-stable}
     environment:
       - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
     volumes:

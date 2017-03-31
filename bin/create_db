@@ -18,4 +18,4 @@ else
     exit 1
 fi
 
-bin/mysql -e "CREATE DATABASE $1 DEFAULT CHARSET utf8"
+bin/mysql -e "CREATE DATABASE $1 DEFAULT CHARSET utf8mb4"
