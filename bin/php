@@ -38,7 +38,7 @@ else:
         '-e', "C_UID=" + env.get('C_UID'),
         '-e', "C_GID=" + env.get('C_GID'),
         'dockerwest/php-pimcore:' + env.get('PHPVERSION'),
-        'gosu', 'www-data', 'php'
+        'php'
     ] + sys.argv[1:]
 
 p = subprocess.Popen(cmd)
