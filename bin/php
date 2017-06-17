@@ -1,35 +1,53 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess, re
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+env = Environment(composepath + '/.env')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', 'application'
+]
 
-# running env?
-running=$(run ps | grep Up | wc -l)
-if [ $running -gt 0 ]; then
-    bin/run exec -T application gosu www-data php "$@"
-else
-    . share/init
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+out, err = p.communicate()
+out = out.decode('utf-8')
 
-    docker run -it --rm \
-        -v "$currentfolder":/phpapp \
-        -e DEVELOPMENT="$DEVELOPMENT" \
-        -e C_UID=$C_UID \
-        -e C_GID=$C_GID \
-        dockerwest/php-pimcore:$PHPVERSION \
-        php "$@"
-fi
+if re.search('Up', out):
+    cmd = [
+        os.path.dirname(sys.argv[0]) + '/run',
+        'exec', 'application', 'gosu', 'www-data', 'php'
+    ] + sys.argv[1:]
+else:
+    cmd = [
+        'docker', 'run', '-it', '--rm',
+        '-v', currentpath + ':/phpapp',
+        '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
+        '-e', "C_UID=" + env.get('C_UID'),
+        '-e', "C_GID=" + env.get('C_GID'),
+        'dockerwest/php-pimcore:' + env.get('PHPVERSION'),
+        'gosu', 'www-data', 'php'
+    ] + sys.argv[1:]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+
