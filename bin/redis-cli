@@ -1,27 +1,45 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess, re
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+env = Environment(composepath + '/.env')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', 'redis'
+]
 
-# running env?
-running=$(run ps | grep Up | wc -l)
-if [ $running -gt 0 ]; then
-    bin/run exec -T redis redis-cli "$@"
-else
-    echo "redis-cli requires a running redis"
-fi
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+out, err = p.communicate()
+out = out.decode('utf-8')
+
+if not re.search('Up', out):
+    raise Exception('We need a running redis server')
+
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'exec', 'redis', 'redis-cli'
+] + sys.argv[1:]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+
