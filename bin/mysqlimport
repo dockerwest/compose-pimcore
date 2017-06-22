@@ -1,32 +1,100 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess, re
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+env = Environment(composepath + '/.env')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+if len(sys.argv) <= 2:
+    raise Exception('You must give a databasename and a sql file')
 
-# running env?
-running=$(run ps | grep Up | wc -l)
-if [ $running -gt 0 ]; then
-    mysqlhash=$(bin/run ps -q mysql | head -n1)
-    db="$1"
-    file="$2"
-    docker cp "$currentfolder/$file" $mysqlhash:/"$file"
-    bin/mysql "$db" -e "SOURCE $file"
-    bin/run exec mysql rm "$file"
-else
-    echo "mysql requires a running mysql server"
-fi
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', 'mysql'
+]
+
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+out, err = p.communicate()
+out = out.decode('utf-8')
+
+if not re.search('Up', out):
+    raise Exception('We need a running mysql server')
+
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', '-q', 'mysql'
+]
+
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+out, err = p.communicate()
+mysqlhash = out.decode('utf-8')
+pattern = re.compile(r'\s+')
+mysqlhash = re.sub(pattern, '', mysqlhash)
+
+if not mysqlhash:
+    raise Exception('No proper hash found for the running mysql instance')
+
+db=sys.argv[1]
+file=sys.argv[2]
+
+cmd = [ 'docker', 'cp', currentpath + '/' + file, mysqlhash + ':/' + file ]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/mysql',
+    db, '-e', 'SOURCE ' + file
+]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'exec', 'mysql', 'rm', file
+]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+

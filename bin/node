@@ -1,28 +1,29 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+env = Environment(composepath + '/.env')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+cmd = [
+    'docker', 'run', '-it', '--rm',
+    '-v', currentpath + ":/nodeapp",
+    '-e', "C_UID=" + env.get('C_UID'),
+    '-e', "C_GID=" + env.get('C_GID'),
+    'dockerwest/nodejs:8',
+    'su-exec', 'node', 'node'
+] + sys.argv[1:]
 
-. share/init
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
 
-docker run -it --rm \
-    -v "$currentfolder":/nodeapp \
-    -e C_UID=$C_UID \
-    -e C_GID=$C_GID \
-    dockerwest/nodejs:7 \
-    node "$@"

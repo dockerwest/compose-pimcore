@@ -1,21 +1,28 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+if len(sys.argv) <= 1:
+    raise Exception('You must give a databasename')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+env = Environment(composepath + '/.env')
 
-bin/mysql -e "CREATE DATABASE $1 DEFAULT CHARSET utf8"
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/mysql',
+    '-e', 'CREATE DATABASE ' + sys.argv[1] + ' DEFAULT CHARSET utf8'
+]
+
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+

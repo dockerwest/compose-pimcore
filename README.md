@@ -106,6 +106,11 @@ Available options are: tmux, screen and byobu
 Helpers
 -------
 
+The helpers are written in python, so you should have python2 or python3
+installed on your system to be able to use them. Most Linux distributions and
+macOS have python already installed so there should be no issue there. There
+are no extra dependencies on python modules.
+
 ### composer
 Run the [composer](https://getcomposer.org/) command inside the php docker container. 
 The working directory will be the current directory you are executing this command from.

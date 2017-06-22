@@ -9,17 +9,22 @@ cd "$(dirname "$(readlink -f "$0")")"
 # we need some configuration
 if [ -e .env ]; then
     . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
 else
-    echo "no config found"
+    # TODO
+    echo "no config found, first run ./environment init"
     exit 1
 fi
 
 PATH="$(pwd)/bin:$PATH"
 export PATH
 
-. share/init
+# start dinghy if its not yet up (macOS)
+if which dinghy > /dev/null 2>&1; then
+    if ! dinghy ip > /dev/null 2>&1; then
+        dinghy up
+    fi
+    eval $(dinghy env)
+fi
 
 cd "$APPLICATION"
 

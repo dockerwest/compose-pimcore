@@ -1,23 +1,24 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess
+from environment import Environment
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
+os.chdir(composepath)
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+env = Environment(composepath + '/.env')
 
-. share/init
-
-projectName=$(echo $BASEHOST | sed 's/[^a-zA-Z]//g')
-
-docker-compose -f "$COMPOSE_FILE" -p "$projectName" "$@"
+cmd = [
+    'docker-compose', '-f', env.get_compose_filename(),
+    '-p', env.get_project_name()
+] + sys.argv[1:]
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
