@@ -58,7 +58,7 @@ def configure_addon(config, addonConfig):
     return config
 
 def get_repo():
-    repoUrl = 'https://gist.githubusercontent.com/Pegasuz/d5b11ae9c32dc479f7a40be6c59f3af6/raw/3b8eda9341b881cea5b99f7ef8ff521eed6c180b/repo.json'
+    repoUrl = 'https://dockerwest.github.io/addon_repo.json'
     repo = json.loads(requests.get(repoUrl).content);
     return repo['data']
 
