@@ -22,3 +22,6 @@ except KeyboardInterrupt:
     except OSError:
        pass
     p.wait()
+
+p.communicate()
+sys.exit(p.returncode)

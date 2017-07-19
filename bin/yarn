@@ -30,3 +30,5 @@ except KeyboardInterrupt:
        pass
     p.wait()
 
+p.communicate()
+sys.exit(p.returncode)
