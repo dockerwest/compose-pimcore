@@ -8,8 +8,11 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
-cmd = [
-    'docker', 'run', '-it', '--rm',
+dockerrun = ['docker', 'run', '--rm']
+if sys.stdout.isatty():
+    dockerrun += ['-it']
+
+cmd = dockerrun + [
     '-v', os.getenv("HOME") + "/.ssh:/home/node/.ssh",
     '-v', os.getenv("HOME") + "/.config/yarn:/home/node/.config/yarn",
     '-v', os.getenv("HOME") + "/.cache/yarn:/home/node/.cache/yarn",

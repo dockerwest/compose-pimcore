@@ -8,8 +8,11 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
-cmd = [
-    'docker', 'run', '-it', '--rm',
+dockerrun = ['docker', 'run', '--rm']
+if sys.stdout.isatty():
+    dockerrun += ['-it']
+
+cmd = dockerrun + [
     '-v', currentpath + ":/nodeapp",
     '-e', "C_UID=" + env.get('C_UID'),
     '-e', "C_GID=" + env.get('C_GID'),

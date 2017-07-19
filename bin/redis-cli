@@ -28,9 +28,12 @@ out = out.decode('utf-8')
 if not re.search('Up', out):
     raise Exception('We need a running redis server')
 
-cmd = [
-    os.path.dirname(sys.argv[0]) + '/run',
-    'exec', 'redis', 'redis-cli'
+dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
+if not sys.stdout.isatty():
+    dockerrun += ['-T']
+
+cmd = dockerrun + [
+    'redis', 'redis-cli'
 ] + sys.argv[1:]
 
 p = subprocess.Popen(cmd)

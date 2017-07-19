@@ -8,8 +8,11 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
-cmd = [
-    'docker', 'run', '-it', '--rm',
+dockerrun = ['docker', 'run', '--rm']
+if sys.stdout.isatty():
+    dockerrun += ['-it']
+
+cmd = dockerrun + [
     '-v', os.getenv("HOME") + "/.ssh:/var/www/.ssh",
     '-v', os.getenv("HOME") + "/.composer:/var/www/.composer",
     '-v', currentpath + ":/phpapp",

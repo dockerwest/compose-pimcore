@@ -28,9 +28,12 @@ out = out.decode('utf-8')
 if not re.search('Up', out):
     raise Exception('We need a running mysql server')
 
-cmd = [
-    os.path.dirname(sys.argv[0]) + '/run',
-    'exec', 'mysql', 'mysqldump', '-uroot', '-p' + env.get('MYSQL_ROOT_PASSWORD')
+dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
+if not sys.stdout.isatty():
+    dockerrun += ['-T']
+
+cmd = dockerrun + [
+    'mysql', 'mysqldump', '-uroot', '-p' + env.get('MYSQL_ROOT_PASSWORD')
 ] + sys.argv[1:]
 
 p = subprocess.Popen(cmd)

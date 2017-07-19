@@ -26,13 +26,19 @@ out, err = p.communicate()
 out = out.decode('utf-8')
 
 if re.search('Up', out):
-    cmd = [
-        os.path.dirname(sys.argv[0]) + '/run',
-        'exec', 'application', 'gosu', 'www-data', 'php'
+    dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
+    if not sys.stdout.isatty():
+        dockerrun += ['-T']
+
+    cmd = dockerrun + [
+        'application', 'gosu', 'www-data', 'php'
     ] + sys.argv[1:]
 else:
-    cmd = [
-        'docker', 'run', '-it', '--rm',
+    dockerrun = ['docker', 'run', '--rm']
+    if sys.stdout.isatty():
+        dockerrun += ['-it']
+
+    cmd = dockerrun + [
         '-v', currentpath + ':/phpapp',
         '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
         '-e', "C_UID=" + env.get('C_UID'),

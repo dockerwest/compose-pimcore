@@ -83,9 +83,12 @@ except KeyboardInterrupt:
        pass
     p.wait()
 
-cmd = [
-    os.path.dirname(sys.argv[0]) + '/run',
-    'exec', 'mysql', 'rm', file
+dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
+if not sys.stdout.isatty():
+    dockerrun += ['-T']
+
+cmd = dockerrun + [
+    'mysql', 'rm', file
 ]
 
 p = subprocess.Popen(cmd)
