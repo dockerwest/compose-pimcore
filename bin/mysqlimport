@@ -70,7 +70,7 @@ except KeyboardInterrupt:
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/mysql',
-    db, '-e', 'SOURCE ' + file
+    db, '--max_allowed_packet=1024M', '-e', 'SOURCE ' + file
 ]
 
 p = subprocess.Popen(cmd)
