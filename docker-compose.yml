@@ -34,7 +34,7 @@ services:
   nginx:
     image: dockerwest/nginx-pimcore:${NGINXVERSION:-stable}
     environment:
-      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
+      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev},${EXTRAHOSTS}
     volumes:
       - ${APPLICATION:-../pimcore}:/phpapp
     links:
