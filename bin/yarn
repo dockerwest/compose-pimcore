@@ -9,7 +9,7 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 env = Environment(composepath + '/.env')
 
 dockerrun = ['docker', 'run', '--rm']
-if hasattr(sys, 'ps1'):
+if sys.stdout.isatty():
     dockerrun += ['-it']
 
 cmd = dockerrun + [
