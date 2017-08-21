@@ -27,7 +27,7 @@ out = out.decode('utf-8')
 
 if re.search('Up', out):
     dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
-    if not sys.stdout.isatty():
+    if not (sys.stdout.isatty() and os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno())):
         dockerrun += ['-T']
 
     cmd = dockerrun + [
@@ -35,7 +35,7 @@ if re.search('Up', out):
     ] + sys.argv[1:]
 else:
     dockerrun = ['docker', 'run', '--rm']
-    if sys.stdout.isatty():
+    if sys.stdout.isatty() and os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
         dockerrun += ['-it']
 
     cmd = dockerrun + [
