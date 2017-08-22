@@ -84,7 +84,7 @@ except KeyboardInterrupt:
     p.wait()
 
 dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
-if not (sys.stdout.isatty() and os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno())):
+if not sys.stdin.isatty():
     dockerrun += ['-T']
 
 cmd = dockerrun + [
