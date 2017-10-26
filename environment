@@ -26,6 +26,8 @@ if which dinghy > /dev/null 2>&1; then
     eval $(dinghy env)
 fi
 
+scriptpath="$(pwd)"
+
 cd "$APPLICATION"
 
 sessionname=$(echo "$BASEHOST" | sed 's/[^a-zA-Z]//g');
@@ -43,7 +45,11 @@ if [ "$MANAGER" = "screen" ]; then
 elif [ "$MANAGER" = "tmux" ]; then
     tmux -L $sessionname has-session -t $sessionname
     if [ $? -ne 0 ]; then
-        tmux -L $sessionname new -s $sessionname
+        if [ -e "$scriptpath/tmux.conf" ]; then
+            tmux -L $sessionname -f "$scriptpath/tmux.conf" new -s $sessionname
+        else
+            tmux -L $sessionname new -s $sessionname
+        fi
     else
         tmux -L $sessionname a -t $sessionname
     fi
