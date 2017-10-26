@@ -7,7 +7,7 @@ services:
       - DOMAIN_NAME=redis.${BASEHOST:-pimcore.dev}
 
   mysql:
-    image: mariadb
+    image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
       - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.dev}
@@ -25,7 +25,7 @@ services:
       - C_GID=${G_UID:-1000}
       - DEVELOPMENT=${DEVELOPMENT:-noprofile}
     volumes:
-      - ${PIMCORE:-../pimcore}:/phpapp
+      - ${APPLICATION:-../pimcore}:/phpapp
     links:
       - mysql
       - redis
@@ -34,9 +34,9 @@ services:
   nginx:
     image: dockerwest/nginx-pimcore:${NGINXVERSION:-stable}
     environment:
-      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev}
+      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev},${EXTRAHOSTS}
     volumes:
-      - ${PIMCORE:-../pimcore}:/phpapp
+      - ${APPLICATION:-../pimcore}:/phpapp
     links:
       - application
 

@@ -9,30 +9,51 @@ cd "$(dirname "$(readlink -f "$0")")"
 # we need some configuration
 if [ -e .env ]; then
     . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
 else
-    echo "no config found"
+    # TODO
+    echo "no config found, first run ./environment init"
     exit 1
 fi
 
 PATH="$(pwd)/bin:$PATH"
 export PATH
 
-. share/init
+# start dinghy if its not yet up (macOS)
+if which dinghy > /dev/null 2>&1; then
+    if ! dinghy ip > /dev/null 2>&1; then
+        dinghy up
+    fi
+    eval $(dinghy env)
+fi
+
+cd "$APPLICATION"
 
 sessionname=$(echo "$BASEHOST" | sed 's/[^a-zA-Z]//g');
 
-if [ "$1" = "screen" ]; then
+MANAGER=$1
+if [ -z "$MANAGER" ]; then
+    MANAGER="$WINDOW_MANAGER"
+fi
+
+if [ "$MANAGER" = "screen" ]; then
     screen -r $sessionname
     if [ "$?" -ne 0 ]; then
         screen -S $sessionname
     fi
-elif [ "$1" = "tmux" ]; then
-    tmux has-session -t $sessionname
+elif [ "$MANAGER" = "tmux" ]; then
+    tmux -L $sessionname has-session -t $sessionname
     if [ $? -ne 0 ]; then
-        tmux new -s $sessionname
+        tmux -L $sessionname new -s $sessionname
     else
-        tmux a -t $sessionname
+        tmux -L $sessionname a -t $sessionname
     fi
+elif [ "$MANAGER" = "byobu" ]; then
+    byobu -L $sessionname has-session -t $sessionname
+    if [ $? -ne 0 ]; then
+        byobu -L $sessionname new -s $sessionname
+    else
+        byobu -L $sessionname a -t $sessionname
+    fi
+else
+    echo "run $0 [screen|tmux|byobu]"
 fi

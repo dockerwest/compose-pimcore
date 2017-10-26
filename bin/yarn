@@ -13,14 +13,14 @@ if sys.stdin.isatty():
     dockerrun += ['-it']
 
 cmd = dockerrun + [
-    '-v', os.getenv("HOME") + "/.ssh:/var/www/.ssh",
-    '-v', os.getenv("HOME") + "/.composer:/var/www/.composer",
-    '-v', currentpath + ":/phpapp",
-    '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
+    '-v', os.getenv("HOME") + "/.ssh:/home/node/.ssh",
+    '-v', os.getenv("HOME") + "/.config/yarn:/home/node/.config/yarn",
+    '-v', os.getenv("HOME") + "/.cache/yarn:/home/node/.cache/yarn",
+    '-v', currentpath + ":/nodeapp",
     '-e', "C_UID=" + env.get('C_UID'),
     '-e', "C_GID=" + env.get('C_GID'),
-    'dockerwest/php-pimcore:' + env.get('PHPVERSION'),
-    'composer'
+    'dockerwest/nodejs:8',
+    'yarn'
 ] + sys.argv[1:]
 
 p = subprocess.Popen(cmd)
