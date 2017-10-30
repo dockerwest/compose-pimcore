@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+
+import os, sys, subprocess, yaml, requests, json
+from environment import Environment
+
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
+os.chdir(composepath)
+
+env = Environment(composepath + '/.env')
+composeFilePath = composepath + '/' + env.get_compose_filename()
+
+
+def get_current_config(composeFilePath):
+    # Get current config
+    stream = file(composeFilePath, 'r')
+    config = yaml.load(stream)
+    return config
+
+def get_addon_config(url):
+    # Get to install config
+    toInstallStream = requests.get(url)
+    addonConfig = yaml.load(toInstallStream.content)
+    return addonConfig
+
+def write_config(path, config):
+    stream = file(path, 'w')
+    yaml.dump(config, stream, default_flow_style=False)
+    return
+
+
+def configure_addon(config, addonConfig):
+    if 'services' in addonConfig:
+        for key,v in addonConfig['services'].items():
+            if key in config['services']:
+                for type,tv in addonConfig['services'][key].items():
+                    if type in config['services'][key]:
+                        if isinstance(addonConfig['services'][key][type], list):
+                            for val in addonConfig['services'][key][type]:
+                                if val not in config['services'][key][type]:
+                                    config['services'][key][type].append(val)
+
+                    else:
+                        config['services'][key].update({type:tv})
+            else:
+                config['services'].update({key:v})
+
+
+    if 'volumes' in addonConfig:
+        if 'volumes' not in config:
+            config['volumes'] = {}
+
+        for key,v in addonConfig['volumes'].items():
+            if val not in config['volumes']:
+                if v is None:
+                    v = {}
+                config['volumes'].update({key:v})
+    return config
+
+def get_repo():
+    repoUrl = 'https://dockerwest.github.io/addon_repo.json'
+    repo = json.loads(requests.get(repoUrl).content);
+    return repo['data']
+
+def print_addon_list(repo):
+    print 'Available addons:'
+    for addon in repo:
+        print '* ' + addon['name'] + ':'
+        print '   ' + addon['description']
+        print '------------------------------------------------------'
+    return
+
+def print_usage():
+    print 'Usage: addon install <name>'
+
+def get_addon_definition(name, repo):
+    definition = ''
+    for key in repo:
+        if name == key['name']:
+            definition = key
+    return definition
+
+
+#
+# DO MAGIC
+#
+
+repo = get_repo()
+
+if (len(sys.argv) == 3 and sys.argv[1] == 'install'):
+    addonDefinition = get_addon_definition(sys.argv[2],repo)
+    if (addonDefinition == ''):
+        sys.exit('Error: No addon found with name ' + sys.argv[2])
+
+    addonConfig = get_addon_config(addonDefinition['config'])
+    config = get_current_config(composeFilePath)
+    config = configure_addon(config,addonConfig)
+    write_config(composeFilePath, config)
+
+    print 'Installation Completed!'
+    print 'Addon installed: ' + addonDefinition['name']
+    print ''
+
+    if ('postInstallMessage' in addonDefinition):
+        print addonDefinition['postInstallMessage']
+else:
+    print_addon_list(repo)
+    print_usage()
+
+
+
+
+
+
+
