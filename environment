@@ -15,6 +15,20 @@ else
     exit 1
 fi
 
+if [ "$1" = "init" ]; then
+    cp ./.env-sample ./.env
+
+    USER_ID=$(id -u)
+    GROUP_ID=$(id -g)
+
+    sed -i -e "s/C_UID=1000/C_UID=$USER_ID/g" ./.env
+    sed -i -e "s/C_GID=1000/C_GID=$GROUP_ID/g" ./.env
+
+    echo "Environment initiated."
+    echo "Please update .env file according to your needs."
+    exit 0
+fi
+
 PATH="$(pwd)/bin:$PATH"
 export PATH
 
