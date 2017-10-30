@@ -5,6 +5,10 @@ Dockerwest Compose Environment for [Pimcore](https://www.pimcore.org/).
 
 For detailed documentation, [visit our website](https://github.com/dockerwest/php-pimcore)
 
+
+***When using Pimcore 5, please use the "pimcore5" branch!***
+
+
 Usage
 -----
 
@@ -62,37 +66,37 @@ DEVELOPMENT=noprofile
 WINDOW_MANAGER=tmux
 ~~~
 
-### C_UID / C_GID
+##### C_UID / C_GID
 
 Configure what UID and GID your PHP container must use. This usually should
 match your Hosts UID and GID. To find your local UID you can run `id -u` and to
 find your local GID you can run `id -g`.
 
-### PHPVERSION
+##### PHPVERSION
 
 Choose your PHP version. To see which versions are available
 [here](https://github.com/dockerwest/php-pimcore).
 
-### NGINXVERSION
+##### NGINXVERSION
 
 Choose what version of Nginx you want. To see which versions are available see
 [here](https://github.com/dockerwest/nginx-pimcore)
 
-### BASEHOST
+##### BASEHOST
 
 This setting defines what the hostname will be you can browse your pimcore app.
 The example configuration will be give you `http://pimcore.dev`.
 
-### MYSQL_ROOT_PASSWORD
+##### MYSQL_ROOT_PASSWORD
 
 Choose whatever you want to use as default root password.
 
-### APPLICATION
+##### APPLICATION
 
 A relative or absolute path to your pimcore code. this can be a checkout of
   [pimcore](https://github.com/pimcore/pimcore).
 
-### DEVELOPMENT
+##### DEVELOPMENT
 
 Set the development flag. Default we use noprofile which will allow us to use
 xdebug. When `DEVELOPMENT=1` you also have tideways enabled which gives you
@@ -101,7 +105,7 @@ profiling output of you application.
 To visualize your profiling output see
 [docker-compose-xhgui](https://github.com/BlackIkeEagle/docker-compose-xhgui)
 
-### WINDOW_MANAGER
+##### WINDOW_MANAGER
 Set the default window manager when running the environment.
 Available options are: tmux, screen and byobu
 
