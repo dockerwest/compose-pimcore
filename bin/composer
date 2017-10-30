@@ -1,31 +1,37 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
-fi
+import os, sys, subprocess
+from environment import Environment
 
-currentfolder="$(pwd)"
+currentpath = os.getcwd()
+composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
-cd "$(dirname "$(dirname "$(readlink -f "$0")")../")"
+env = Environment(composepath + '/.env')
 
-# we need some configuration
-if [ -e .env ]; then
-    . "$(pwd)/.env"
-elif [ -e .env-sample ]; then
-    . "$(pwd)/.env-sample"
-else
-    echo "no config found"
-    exit 1
-fi
+dockerrun = ['docker', 'run', '--rm']
+if sys.stdin.isatty():
+    dockerrun += ['-it']
 
-. share/init
+cmd = dockerrun + [
+    '-v', os.getenv("HOME") + "/.ssh:/var/www/.ssh",
+    '-v', os.getenv("HOME") + "/.composer:/var/www/.composer",
+    '-v', currentpath + ":/phpapp",
+    '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
+    '-e', "C_UID=" + env.get('C_UID'),
+    '-e', "C_GID=" + env.get('C_GID'),
+    'dockerwest/php-pimcore:' + env.get('PHPVERSION'),
+    'composer'
+] + sys.argv[1:]
 
-docker run -it --rm \
-    -v "$HOME/.ssh":/var/www/.ssh \
-    -v "$HOME/.composer":/var/www/.composer \
-    -v "$currentfolder":/phpapp \
-    -e DEVELOPMENT="$DEVELOPMENT" \
-    -e C_UID=$C_UID \
-    -e C_GID=$C_GID \
-    dockerwest/php-pimcore:$PHPVERSION \
-    composer "$@"
+p = subprocess.Popen(cmd)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+       p.terminate()
+    except OSError:
+       pass
+    p.wait()
+
+p.communicate()
+sys.exit(p.returncode)
