@@ -1,5 +1,19 @@
 #!/usr/bin/env sh
 
+init_environment() {
+    cp ./.env-sample ./.env
+
+    USER_ID=$(id -u)
+    GROUP_ID=$(id -g)
+
+    sed -i -e "s/C_UID=1000/C_UID=$USER_ID/g" ./.env
+    sed -i -e "s/C_GID=1000/C_GID=$GROUP_ID/g" ./.env
+
+    echo "Environment initiated."
+    echo "Please update .env file according to your needs. Then start the environment by running ./environment"
+}
+
+
 if which greadlink > /dev/null 2>&1; then
     alias readlink=greadlink
 fi
@@ -10,22 +24,14 @@ cd "$(dirname "$(readlink -f "$0")")"
 if [ -e .env ]; then
     . "$(pwd)/.env"
 else
-    # TODO
-    echo "no config found, first run ./environment init"
-    exit 1
+    echo "No config found, running initialisation..."
+    sleep 1
+    init_environment
+    exit 0
 fi
 
 if [ "$1" = "init" ]; then
-    cp ./.env-sample ./.env
-
-    USER_ID=$(id -u)
-    GROUP_ID=$(id -g)
-
-    sed -i -e "s/C_UID=1000/C_UID=$USER_ID/g" ./.env
-    sed -i -e "s/C_GID=1000/C_GID=$GROUP_ID/g" ./.env
-
-    echo "Environment initiated."
-    echo "Please update .env file according to your needs."
+    init_environment
     exit 0
 fi
 
