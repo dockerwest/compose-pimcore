@@ -4,21 +4,21 @@ services:
   redis:
     image: redis:alpine
     environment:
-      - DOMAIN_NAME=redis.${BASEHOST:-pimcore.dev}
+      - DOMAIN_NAME=redis.${BASEHOST:-pimcore.test}
     network_mode: bridge
 
   mysql:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
-      - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.dev}
+      - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.test}
     command: --innodb-doublewrite=0
     network_mode: bridge
 
   mailcatcher:
     image: schickling/mailcatcher
     environment:
-      - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.dev}
+      - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.test}
     network_mode: bridge
 
   application:
@@ -38,7 +38,7 @@ services:
   nginx:
     image: dockerwest/nginx-symfony:${NGINXVERSION:-stable}
     environment:
-      - VIRTUAL_HOST=${BASEHOST:-pimcore.dev},www.${BASEHOST:-pimcore.dev},${EXTRAHOSTS}
+      - VIRTUAL_HOST=${BASEHOST:-pimcore.test},www.${BASEHOST:-pimcore.test},${EXTRAHOSTS}
       - VIRTUAL_PORT=80
     volumes:
       - ${APPLICATION:-../pimcore}:/phpapp
