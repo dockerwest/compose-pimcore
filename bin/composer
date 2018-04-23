@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+import re
 from environment import Environment
 
 currentpath = os.getcwd()
@@ -10,11 +11,40 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', 'application'
+]
+
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+        p.terminate()
+    except OSError:
+        pass
+    p.wait()
+out, err = p.communicate()
+out = out.decode('utf-8')
+
 dockerrun = ['docker', 'run', '--rm']
 if sys.stdin.isatty():
     dockerrun += ['-it']
 
-cmd = dockerrun + [
+cmd = dockerrun
+
+if re.search('Up', out):
+    applicationcontainer = re.search(
+        r'\b[a-z0-9]+_application_[0-9]+\b',
+        out
+    ).group(0)
+    cmd += [
+        '--pid=container:' + applicationcontainer,
+        '--net=container:' + applicationcontainer
+    ]
+
+cmd += [
     '-v', os.getenv("HOME") + "/.ssh:/var/www/.ssh",
     '-v', os.getenv("HOME") + "/.composer:/var/www/.composer",
     '-v', currentpath + ":/phpapp",
@@ -25,15 +55,4 @@ cmd = dockerrun + [
     'composer'
 ] + sys.argv[1:]
 
-p = subprocess.Popen(cmd)
-try:
-    p.wait()
-except KeyboardInterrupt:
-    try:
-        p.terminate()
-    except OSError:
-        pass
-    p.wait()
-
-p.communicate()
-sys.exit(p.returncode)
+os.execvp(cmd[0], cmd)
