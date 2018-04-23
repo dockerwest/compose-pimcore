@@ -2,7 +2,6 @@
 
 import os
 import sys
-import subprocess
 from environment import Environment
 
 currentpath = os.getcwd()
@@ -25,15 +24,4 @@ cmd = dockerrun + [
     'yarn'
 ] + sys.argv[1:]
 
-p = subprocess.Popen(cmd)
-try:
-    p.wait()
-except KeyboardInterrupt:
-    try:
-        p.terminate()
-    except OSError:
-        pass
-    p.wait()
-
-p.communicate()
-sys.exit(p.returncode)
+os.execvp(cmd[0], cmd)
