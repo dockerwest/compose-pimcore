@@ -81,6 +81,8 @@ elif [ "$MANAGER" = "byobu" ]; then
     else
         byobu -L $sessionname a -t $sessionname
     fi
+elif [ "$MANAGER" = "shell" ]; then
+    exec $SHELL
 else
-    echo "run $0 [screen|tmux|byobu]"
+    echo "run $0 [screen|tmux|byobu|shell]"
 fi
