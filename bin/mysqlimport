@@ -11,8 +11,8 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
-if len(sys.argv) <= 2:
-    raise Exception('You must give a databasename and a sql file')
+if len(sys.argv) <= 1:
+    raise Exception('You must at least give a databasename')
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/run',
@@ -34,75 +34,76 @@ out = out.decode('utf-8')
 if not re.search('Up', out):
     raise Exception('We need a running mysql server')
 
-cmd = [
-    os.path.dirname(sys.argv[0]) + '/run',
-    'ps', '-q', 'mysql'
-]
+mysqlcontainer = re.search(
+    r'\b[a-z0-9]+_mysql_[0-9]+\b',
+    out
+).group(0)
 
-p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-try:
-    p.wait()
-except KeyboardInterrupt:
-    try:
-        p.terminate()
-    except OSError:
-        pass
-    p.wait()
-out, err = p.communicate()
-mysqlhash = out.decode('utf-8')
-pattern = re.compile(r'\s+')
-mysqlhash = re.sub(pattern, '', mysqlhash)
-
-if not mysqlhash:
-    raise Exception('No proper hash found for the running mysql instance')
+if not mysqlcontainer:
+    raise Exception('No proper name found for the running mysql instance')
 
 db = sys.argv[1]
-file = sys.argv[2]
-
-cmd = ['docker', 'cp', currentpath + '/' + file, mysqlhash + ':/' + file]
-
-p = subprocess.Popen(cmd)
 try:
-    p.wait()
-except KeyboardInterrupt:
+    sqlfile = sys.argv[2]
+except IndexError:
+    sqlfile = None
+
+if sqlfile is not None:
+    cmd = [
+        'docker', 'cp',
+        currentpath + '/' + sqlfile, mysqlcontainer + ':/' + sqlfile
+    ]
+
+    p = subprocess.Popen(cmd)
     try:
-        p.terminate()
-    except OSError:
-        pass
+        p.wait()
+    except KeyboardInterrupt:
+        try:
+            p.terminate()
+        except OSError:
+            pass
     p.wait()
 
-cmd = [
-    os.path.dirname(sys.argv[0]) + '/mysql',
-    db, '--max_allowed_packet=1024M', '-e', 'SOURCE ' + file
-]
+    cmd = [
+        os.path.dirname(sys.argv[0]) + '/mysql',
+        db, '--max_allowed_packet=1024M', '-e', 'SOURCE ' + sqlfile
+    ]
 
-p = subprocess.Popen(cmd)
-try:
-    p.wait()
-except KeyboardInterrupt:
+    p = subprocess.Popen(cmd)
     try:
-        p.terminate()
-    except OSError:
-        pass
+        p.wait()
+    except KeyboardInterrupt:
+        try:
+            p.terminate()
+        except OSError:
+            pass
     p.wait()
 
-dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
-if not sys.stdin.isatty():
-    dockerrun += ['-T']
+    dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
+    if not sys.stdin.isatty():
+        dockerrun += ['-T']
 
-cmd = dockerrun + [
-    'mysql', 'rm', file
-]
+    cmd = dockerrun + [
+        'mysql', 'rm', sqlfile
+    ]
 
-p = subprocess.Popen(cmd)
-try:
-    p.wait()
-except KeyboardInterrupt:
+    p = subprocess.Popen(cmd)
     try:
-        p.terminate()
-    except OSError:
-        pass
+        p.wait()
+    except KeyboardInterrupt:
+        try:
+            p.terminate()
+        except OSError:
+            pass
     p.wait()
 
-p.communicate()
-sys.exit(p.returncode)
+    p.communicate()
+    sys.exit(p.returncode)
+else:
+    # lets assume sql is being piped in
+    cmd = [
+        'docker', 'exec', '-i', mysqlcontainer,
+        'mysql', '-uroot', '-p' + env.get('MYSQL_ROOT_PASSWORD'),
+        '--max_allowed_packet=1024M'
+    ]
+    os.execvp(cmd[0], cmd)
