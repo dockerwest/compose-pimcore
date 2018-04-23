@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, re
+import os
+import sys
+import subprocess
+import re
 from environment import Environment
 
 currentpath = os.getcwd()
@@ -21,9 +24,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 out, err = p.communicate()
 out = out.decode('utf-8')
@@ -41,9 +44,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 out, err = p.communicate()
 mysqlhash = out.decode('utf-8')
@@ -53,19 +56,19 @@ mysqlhash = re.sub(pattern, '', mysqlhash)
 if not mysqlhash:
     raise Exception('No proper hash found for the running mysql instance')
 
-db=sys.argv[1]
-file=sys.argv[2]
+db = sys.argv[1]
+file = sys.argv[2]
 
-cmd = [ 'docker', 'cp', currentpath + '/' + file, mysqlhash + ':/' + file ]
+cmd = ['docker', 'cp', currentpath + '/' + file, mysqlhash + ':/' + file]
 
 p = subprocess.Popen(cmd)
 try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 
 cmd = [
@@ -78,9 +81,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 
 dockerrun = [os.path.dirname(sys.argv[0]) + '/run', 'exec']
@@ -96,9 +99,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 
 p.communicate()

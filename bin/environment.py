@@ -3,8 +3,12 @@ Read .env file, basically taken from docker-compose for simplicity and modified
 for our usecase
 """
 
-import os, contextlib, codecs, re
+import os
+import contextlib
+import codecs
+import re
 from distutils.spawn import find_executable
+
 
 def split_env(env):
     if '=' in env:
@@ -30,6 +34,7 @@ def env_vars_from_file(filename):
                 env[k] = v
     return env
 
+
 class Environment:
 
     required_keys = [
@@ -52,7 +57,7 @@ class Environment:
         return 'docker-compose.yml'
 
     def get_project_name(self):
-        regex = re.compile('\W+');
+        regex = re.compile('\\W+')
         basehost = self.get('BASEHOST')
         projectname = regex.sub('', basehost)
         return projectname
@@ -61,4 +66,3 @@ class Environment:
         if key not in self.environment:
             return None
         return self.environment[key]
-

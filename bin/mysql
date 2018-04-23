@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, re
+import os
+import sys
+import subprocess
+import re
 from environment import Environment
 
 currentpath = os.getcwd()
@@ -18,9 +21,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 out, err = p.communicate()
 out = out.decode('utf-8')
@@ -41,9 +44,9 @@ try:
     p.wait()
 except KeyboardInterrupt:
     try:
-       p.terminate()
+        p.terminate()
     except OSError:
-       pass
+        pass
     p.wait()
 
 p.communicate()
