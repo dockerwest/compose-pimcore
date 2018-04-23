@@ -14,11 +14,12 @@ init_environment() {
 }
 
 
-if which greadlink > /dev/null 2>&1; then
-    alias readlink=greadlink
+uname=$(uname)
+if [[ "$uname" == "Linux" ]]; then
+    cd "$(dirname "$(readlink -f "$0")")"
+else
+    cd "$(cd "$(dirname "$0")"; pwd -P)"
 fi
-
-cd "$(dirname "$(readlink -f "$0")")"
 
 # we need some configuration
 if [ -e .env ]; then
