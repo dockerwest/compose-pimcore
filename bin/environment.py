@@ -7,7 +7,7 @@ import os
 import contextlib
 import codecs
 import re
-from distutils.spawn import find_executable
+import shutil
 
 
 def split_env(env):
@@ -51,7 +51,7 @@ class Environment:
                 raise ValueError("Env does not contain %s" % requiredkey)
 
     def get_compose_filename(self):
-        dingyexec = find_executable('dinghy')
+        dingyexec = shutil.which('dinghy')
         if None is not dingyexec:
             return 'docker-compose-dinghy.yml'
         return 'docker-compose.yml'
