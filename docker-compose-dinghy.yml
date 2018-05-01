@@ -36,7 +36,7 @@ services:
     network_mode: bridge
 
   nginx:
-    image: dockerwest/nginx-pimcore5:${NGINXVERSION:-stable}
+    image: dockerwest/nginx-pimcore${PIMCOREVERSION:-5}:${NGINXVERSION:-stable}
     environment:
       - VIRTUAL_HOST=${BASEHOST:-pimcore.test},${EXTRAHOSTS}
       - VIRTUAL_PORT=80
