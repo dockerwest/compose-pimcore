@@ -59,7 +59,7 @@ C_UID=1000
 C_GID=1000
 PHPVERSION=7.1
 NGINXVERSION=stable
-BASEHOST=pimcore.test
+BASEHOST=pimcore.docker
 MYSQL_ROOT_PASSWORD=toor
 APPLICATION=../pimcore
 DEVELOPMENT=noprofile
@@ -85,7 +85,7 @@ Choose what version of Nginx you want. To see which versions are available see
 ##### BASEHOST
 
 This setting defines what the hostname will be you can browse your pimcore app.
-The example configuration will be give you `http://pimcore.test`.
+The example configuration will be give you `http://pimcore.docker`.
 
 ##### MYSQL_ROOT_PASSWORD
 
