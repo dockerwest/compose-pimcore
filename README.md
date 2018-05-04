@@ -59,6 +59,7 @@ C_UID=1000
 C_GID=1000
 PHPVERSION=7.1
 NGINXVERSION=stable
+PIMCOREVERSION=5
 BASEHOST=pimcore.docker
 MYSQL_ROOT_PASSWORD=toor
 APPLICATION=../pimcore
@@ -81,6 +82,11 @@ Choose your PHP version. To see which versions are available
 
 Choose what version of Nginx you want. To see which versions are available see
 [here](https://github.com/dockerwest/nginx-pimcore)
+
+### PIMCOREVERSION
+
+Choose the version of pimcore you are going to use. The nginx configuration is
+slightly different between version 4 and version 5.
 
 ##### BASEHOST
 
