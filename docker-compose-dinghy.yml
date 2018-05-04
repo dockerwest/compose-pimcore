@@ -26,7 +26,7 @@ services:
     environment:
       - C_UID=${C_UID:-1000}
       - C_GID=${G_UID:-1000}
-      - DEVELOPMENT=${DEVELOPMENT:-noprofile}
+      - DEVELOPMENT=${DEVELOPMENT:-1}
     volumes:
       - ${APPLICATION:-../pimcore}:/phpapp
     links:

@@ -62,7 +62,7 @@ NGINXVERSION=stable
 BASEHOST=pimcore.docker
 MYSQL_ROOT_PASSWORD=toor
 APPLICATION=../pimcore
-DEVELOPMENT=noprofile
+DEVELOPMENT=1
 WINDOW_MANAGER=tmux
 ~~~
 
@@ -96,14 +96,15 @@ Choose whatever you want to use as default root password.
 A relative or absolute path to your pimcore code. this can be a checkout of
   [pimcore](https://github.com/pimcore/pimcore).
 
-##### DEVELOPMENT
+### DEVELOPMENT
 
-Set the development flag. Default we use noprofile which will allow us to use
-xdebug. When `DEVELOPMENT=1` you also have tideways enabled which gives you
-profiling output of you application.
+There is the `DEVELOPMENT` environment variable wich will enable xdebug,
+composer and enable timestamp checking in opcache. 
 
-To visualize your profiling output see
-[docker-compose-xhgui](https://github.com/BlackIkeEagle/docker-compose-xhgui)
+When `DEVELOPMENT` is enabled xdebug should work out of the box. When you have
+issues - like while running docker for mac - you can set the extra environment
+variable `XDEBUG_CONFIG` with your hosts ip in it so xdebug can properly
+connect back.
 
 ##### WINDOW_MANAGER
 Set the default window manager when running the environment.
