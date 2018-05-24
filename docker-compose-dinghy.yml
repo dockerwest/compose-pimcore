@@ -12,7 +12,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
       - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.docker}
-    command: --innodb-doublewrite=0 --innodb-large-prefix=1 --innodb-file-format=Barracuda
+    command: --innodb-doublewrite=0 --innodb-large-prefix=1 --innodb-file-format=Barracuda --innodb-page-size=32K
     network_mode: bridge
 
   mailcatcher:
