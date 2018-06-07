@@ -29,7 +29,7 @@ out, err = p.communicate()
 out = out.decode('utf-8')
 
 dockerrun = ['docker', 'run', '--rm']
-if sys.stdin.isatty():
+if sys.stdin.isatty() and sys.stdout.isatty():
     dockerrun += ['-it']
 
 cmd = dockerrun

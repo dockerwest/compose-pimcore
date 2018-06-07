@@ -10,7 +10,7 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 env = Environment(composepath + '/.env')
 
 dockerrun = ['docker', 'run', '--rm']
-if sys.stdin.isatty():
+if sys.stdin.isatty() and sys.stdout.isatty():
     dockerrun += ['-it']
 
 cmd = dockerrun + [

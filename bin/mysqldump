@@ -37,7 +37,7 @@ mysqlcontainer = re.search(
 ).group(0)
 
 dockerrun = ['docker', 'exec', '-i']
-if sys.stdin.isatty():
+if sys.stdin.isatty() and sys.stdout.isatty():
     dockerrun += ['-t']
 
 cmd = dockerrun + [
