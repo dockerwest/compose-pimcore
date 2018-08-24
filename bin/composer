@@ -51,6 +51,7 @@ cmd += [
     '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
     '-e', "C_UID=" + env.get('C_UID'),
     '-e', "C_GID=" + env.get('C_GID'),
+    '-e', "COMPOSER_MEMORY_LIMIT=-1",
     'dockerwest/php-pimcore:' + env.get('PHPVERSION'),
     'composer'
 ] + sys.argv[1:]
