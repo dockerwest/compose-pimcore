@@ -14,7 +14,11 @@ env = Environment(composepath + '/.env')
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/mysql',
-    '-e', 'CREATE DATABASE ' + sys.argv[1] + ' DEFAULT CHARSET utf8mb4'
+    '-e',
+    (
+        'CREATE DATABASE ' + sys.argv[1] +
+        ' DEFAULT CHARSET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci'
+    )
 ]
 
 os.execvp(cmd[0], cmd)
