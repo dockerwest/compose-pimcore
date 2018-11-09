@@ -104,6 +104,6 @@ else:
     cmd = [
         'docker', 'exec', '-i', mysqlcontainer,
         'mysql', '-uroot', '-p' + env.get('MYSQL_ROOT_PASSWORD'),
-        '--max_allowed_packet=1024M'
+        '--max_allowed_packet=1024M', db
     ]
     os.execvp(cmd[0], cmd)
