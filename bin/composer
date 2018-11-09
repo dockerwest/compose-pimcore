@@ -35,10 +35,22 @@ if sys.stdin.isatty() and sys.stdout.isatty():
 cmd = dockerrun
 
 if re.search('Up', out):
-    applicationcontainer = re.search(
-        r'\b[a-z0-9]+_application_[0-9]+\b',
-        out
-    ).group(0)
+    containercmd = [
+        os.path.dirname(sys.argv[0]) + '/run',
+        'ps', '-q', 'application'
+    ]
+
+    p = subprocess.Popen(containercmd, stdout=subprocess.PIPE)
+    try:
+        p.wait()
+    except KeyboardInterrupt:
+        try:
+            p.terminate()
+        except OSError:
+            pass
+        p.wait()
+    out, err = p.communicate()
+    applicationcontainer = out.decode('utf-8').strip()
     cmd += [
         '--pid=container:' + applicationcontainer,
         '--net=container:' + applicationcontainer

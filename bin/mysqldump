@@ -31,10 +31,25 @@ out = out.decode('utf-8')
 if not re.search('Up', out):
     raise Exception('We need a running mysql server')
 
-mysqlcontainer = re.search(
-    r'\b[a-z0-9]+_mysql_[0-9]+\b',
-    out
-).group(0)
+cmd = [
+    os.path.dirname(sys.argv[0]) + '/run',
+    'ps', '-q', 'mysql'
+]
+
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+try:
+    p.wait()
+except KeyboardInterrupt:
+    try:
+        p.terminate()
+    except OSError:
+        pass
+    p.wait()
+out, err = p.communicate()
+mysqlcontainer = out.decode('utf-8').strip()
+
+if not mysqlcontainer:
+    raise Exception('No proper name found for the running mysql instance')
 
 dockerrun = ['docker', 'exec', '-i']
 if sys.stdin.isatty() and sys.stdout.isatty():
