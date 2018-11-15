@@ -16,9 +16,10 @@ services:
     network_mode: bridge
 
   mailcatcher:
-    image: schickling/mailcatcher
+    image: mailhog/mailhog
     environment:
-      - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.docker}
+      - VIRTUAL_HOST=mailcatcher.${BASEHOST:-pimcore.docker}
+      - VIRTUAL_PORT=8025
     network_mode: bridge
 
   application:

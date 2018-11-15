@@ -14,7 +14,7 @@ services:
     command: --innodb-doublewrite=0 --innodb-large-prefix=1 --innodb-file-format=Barracuda --innodb-page-size=32K
 
   mailcatcher:
-    image: schickling/mailcatcher
+    image: mailhog/mailhog
     environment:
       - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.docker}
 
