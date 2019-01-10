@@ -28,7 +28,7 @@ except KeyboardInterrupt:
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/php', 'vendor/bin/pimcore-install',
-    '--admin-username=admin', '--admin-password=admin',
+    '--admin-username=admin', '--admin-password=DockerWest123!',
     '--mysql-host-socket=mysql', '--mysql-username=root',
     '--mysql-password=' + env.get('MYSQL_ROOT_PASSWORD'),
     '--mysql-database=pimcore', '--mysql-port=3306', '-n'

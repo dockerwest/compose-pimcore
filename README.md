@@ -126,6 +126,12 @@ are no extra dependencies on python modules.
 
 For detailed information on helpers, see [our website](https://dockerwest.github.io/compose-pimcore/)
 
+### install-pimcore
+
+This will run the pimcore installation create a default admin login user. The
+admin user is `admin` and the password is `DockerWest123!`. The admin endpoint
+will be found under `/admin`.
+
 License
 -------
 
