@@ -5,10 +5,6 @@ Dockerwest Compose Environment for [Pimcore](https://www.pimcore.org/).
 
 For detailed documentation, [visit our website](https://dockerwest.github.io/compose-pimcore/)
 
-
-***When using Pimcore 5, please use the "pimcore5" branch!***
-
-
 Usage
 -----
 
