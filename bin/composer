@@ -9,6 +9,15 @@ from environment import Environment
 currentpath = os.getcwd()
 composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
+sshconfigpath = os.getenv("HOME") + '/.ssh'
+composerconfigpath = os.getenv("HOME") + '/.composer'
+
+# make sure .ssh and .composer exist in the users home
+if not os.path.exists(sshconfigpath):
+    os.mkdir(sshconfigpath)
+if not os.path.exists(composerconfigpath):
+    os.mkdir(composerconfigpath)
+
 env = Environment(composepath + '/.env')
 
 cmd = [
@@ -57,8 +66,8 @@ if re.search('Up', out):
     ]
 
 cmd += [
-    '-v', os.getenv("HOME") + "/.ssh:/var/www/.ssh",
-    '-v', os.getenv("HOME") + "/.composer:/var/www/.composer",
+    '-v', sshconfigpath + ":/var/www/.ssh",
+    '-v', composerconfigpath + ":/var/www/.composer",
     '-v', currentpath + ":/phpapp",
     '-e', "DEVELOPMENT=" + env.get('DEVELOPMENT'),
     '-e', "C_UID=" + env.get('C_UID'),
