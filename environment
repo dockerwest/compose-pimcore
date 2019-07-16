@@ -15,7 +15,7 @@ init_environment() {
 
 
 uname=$(uname)
-if [ "$uname" == "Linux" ]; then
+if [ "$uname" = "Linux" ]; then
     cd "$(dirname "$(readlink -f "$0")")"
 else
     cd "$(cd "$(dirname "$0")"; pwd -P)"
