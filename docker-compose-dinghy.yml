@@ -14,6 +14,8 @@ services:
       - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.docker}
     command: --innodb-doublewrite=0 --innodb-large-prefix=1 --innodb-file-format=Barracuda --innodb-page-size=32K
     network_mode: bridge
+    ports:
+     - 3306:3306
 
   mailcatcher:
     image: mailhog/mailhog
