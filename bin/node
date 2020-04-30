@@ -17,8 +17,8 @@ cmd = dockerrun + [
     '-v', currentpath + ":/nodeapp",
     '-e', "C_UID=" + env.get('C_UID'),
     '-e', "C_GID=" + env.get('C_GID'),
-    'dockerwest/nodejs:8',
-    'su-exec', 'node', 'node'
+    'dockerwest/nodejs:' + env.get('NODEVERSION'),
+    'node'
 ] + sys.argv[1:]
 
 os.execvp(cmd[0], cmd)
