@@ -20,7 +20,7 @@ cmd = dockerrun + [
     '-v', currentpath + ":/nodeapp",
     '-e', "C_UID=" + env.get('C_UID'),
     '-e', "C_GID=" + env.get('C_GID'),
-    'dockerwest/nodejs:8',
+    'dockerwest/nodejs:' + env.get('NODEVERSION'),
     'yarn'
 ] + sys.argv[1:]
 
