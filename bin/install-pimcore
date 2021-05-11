@@ -10,7 +10,7 @@ composepath = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../')
 
 env = Environment(composepath + '/.env')
 
-if '5' != env.get('PIMCOREVERSION'):
+if int(env.get('PIMCOREVERSION')) < 5:
     print('install-pimcore command is only usable for Pimcore 5')
     exit()
 

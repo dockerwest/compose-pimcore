@@ -7,11 +7,11 @@ services:
       - DOMAIN_NAME=redis.${BASEHOST:-pimcore.docker}
 
   mysql:
-    image: mysql:5.7
+    image: docker.io/library/mysql:${MYSQLVERSION:-8}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
       - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.docker}
-    command: --innodb-doublewrite=0 --innodb-large-prefix=1 --innodb-file-format=Barracuda --innodb-page-size=32K
+    command: --innodb-doublewrite=0 --lower-case-table-names=1 --innodb-page-size=32K
 
   mailcatcher:
     image: mailhog/mailhog
@@ -19,7 +19,7 @@ services:
       - DOMAIN_NAME=mailcatcher.${BASEHOST:-pimcore.docker}
 
   application:
-    image: dockerwest/php-pimcore:${PHPVERSION:-7.1}
+    image: dockerwest/php-pimcore:${PHPVERSION:-8.0}
     environment:
       - C_UID=${C_UID:-1000}
       - C_GID=${C_GID:-1000}
