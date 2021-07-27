@@ -22,7 +22,7 @@ env = Environment(composepath + '/.env')
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/run',
-    'ps', 'application'
+    'ps', '--services', '--filter', 'status=running'
 ]
 
 p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -36,6 +36,7 @@ except KeyboardInterrupt:
     p.wait()
 out, err = p.communicate()
 out = out.decode('utf-8')
+runningContainers = out.splitlines()
 
 dockerrun = ['docker', 'run', '--rm']
 if sys.stdin.isatty() and sys.stdout.isatty():
@@ -43,7 +44,7 @@ if sys.stdin.isatty() and sys.stdout.isatty():
 
 cmd = dockerrun
 
-if re.search('Up', out):
+if 'application' in runningContainers:
     containercmd = [
         os.path.dirname(sys.argv[0]) + '/run',
         'ps', '-q', 'application'
