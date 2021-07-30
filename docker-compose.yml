@@ -7,7 +7,7 @@ services:
       - DOMAIN_NAME=redis.${BASEHOST:-pimcore.docker}
 
   mysql:
-    image: docker.io/library/mysql:${MYSQLVERSION:-8}
+    image: docker.io/library/${DBMS:-mysql}:${MYSQLVERSION:-8}
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-toor}
       - DOMAIN_NAME=mysql.${BASEHOST:-pimcore.docker}
