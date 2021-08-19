@@ -13,7 +13,7 @@ env = Environment(composepath + '/.env')
 
 cmd = [
     os.path.dirname(sys.argv[0]) + '/run',
-    'ps', 'mysql'
+    'ps', '--services', '--filter', 'status=running'
 ]
 
 p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -27,8 +27,9 @@ except KeyboardInterrupt:
     p.wait()
 out, err = p.communicate()
 out = out.decode('utf-8')
+runningContainers = out.splitlines()
 
-if not re.search('Up', out):
+if not 'mysql' in runningContainers:
     raise Exception('We need a running mysql server')
 
 cmd = [
